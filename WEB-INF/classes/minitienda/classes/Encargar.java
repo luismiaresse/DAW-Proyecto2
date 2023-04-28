@@ -12,7 +12,6 @@ public class Encargar {
         this.cantidad = cantidad;
     }
 
-
     public float getPrecio() {
         return precio;
     }
@@ -42,5 +41,4 @@ public class Encargar {
         if (getClass() != obj.getClass()) { return false; }
         return true;
     }
-    
 }

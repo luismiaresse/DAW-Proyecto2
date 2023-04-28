@@ -8,6 +8,7 @@
     String producto = (String)session.getAttribute("producto");
     // Obtenemos el password a partir de la sesion
     String cantidad = (String)session.getAttribute("cantidad");
+
 %>
 
 <!DOCTYPE html>
@@ -53,3 +54,10 @@
     <p> Producto: <%=producto %> <br>Cantidad: <%=cantidad %></p>
 </body>
 </html>
+
+<%
+    // Obtenemos el nombre de usuario a partir de la sesion
+    String producto = (String)session.setAttribute("producto");
+    // Obtenemos el password a partir de la sesion
+    String cantidad = (String)session.getAttribute("cantidad");
+%>
