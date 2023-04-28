@@ -1,5 +1,7 @@
 package minitienda.database;
 
+import minitienda.classes.Usuario;
+
 import java.awt.Color;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -33,7 +35,7 @@ public class UsuarioDAO extends AbstractDAO {
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            this.getAppFront().loginError("Inicio de sesión incorrecto");
+//            this.getAppFront().loginError("Inicio de sesión incorrecto");
             return null;
         }
         return resultado;
@@ -55,7 +57,7 @@ public class UsuarioDAO extends AbstractDAO {
             }
             rsUsuario = stmUsuario.executeQuery();
             while (rsUsuario.next()) {
-                Usuario usuario = new Usuario(rsUsuario.getString("dni"), rsUsuario.getString("nombre"), rsUsuario.getString("fec_inicio"), rsUsuario.getString("telefono"), null, TipoUsuario.valueOf(rsUsuario.getString("tipo")));
+                Usuario usuario = new Usuario(rsUsuario.getString("nombre"), null);
                 resultado.add(usuario);
             }
 
@@ -65,38 +67,21 @@ public class UsuarioDAO extends AbstractDAO {
         return resultado;
     }
 
-    public boolean insertUser(String[] insert, TipoUsuario tipo) {
+    public boolean insertUser(String[] insert) {
         Connection con;
-        PreparedStatement stmUsuario, stmSecund;
+        PreparedStatement stmUsuario;
         con = this.getConnection();
         try {
             con.setAutoCommit(false);   // Para realizar una sola transacción
-            stmUsuario = con.prepareStatement("INSERT INTO public.usuarios VALUES (?, ?, cast(now() as date), ?, ?, '" + tipo.toString() + "')");
-            for (int i = 1; i <= Usuario.getAttributeNames().size() - 2; i++) {
+            stmUsuario = con.prepareStatement("INSERT INTO public.usuarios VALUES (?, ?)");
+            for (int i = 1; i <= Usuario.getAttributeNames().size(); i++) {
                 stmUsuario.setString(i, insert[i - 1]);
             }
-            if (tipo == TipoUsuario.monitor) {
-                stmSecund = con.prepareStatement("INSERT INTO public.monitores VALUES (?, ?)");
-                stmSecund.setString(1, insert[0]);                  // DNI
-                stmSecund.setString(2, insert[insert.length - 1]);  // Especialidad
-            } else {
-                stmSecund = con.prepareStatement("INSERT INTO public.clientes VALUES (?, ?, ?, ?)");
-                if (!insert[insert.length - 3].equals("")) {
-                    stmSecund.setInt(1, Integer.valueOf(insert[insert.length - 3]));  // Abonado
-                } else {
-                    stmSecund.setInt(1, 0);
-                }
-                stmSecund.setString(2, insert[0]);  // DNI
-                stmSecund.setString(3, insert[insert.length - 2]);  // Dirección
-                stmSecund.setString(4, insert[insert.length - 1]);  // Banco
-
-            }
             stmUsuario.executeUpdate();
-            stmSecund.executeUpdate();
             con.commit();
             con.setAutoCommit(true);
         } catch (SQLException ex) {
-            getAppFront().showLabel(ex.getMessage(), Color.RED);
+//            getAppFront().showLabel(ex.getMessage(), Color.RED);
             try {
                 // Revierte en caso de fallo (evita error "current transaction is aborted")
                 con.rollback();

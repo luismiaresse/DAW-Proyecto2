@@ -1,7 +1,9 @@
 package minitienda.database;
 
+import minitienda.classes.*;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Properties;
 import java.sql.*;
 import javax.swing.JOptionPane;
@@ -32,6 +34,7 @@ public class DBFront {
                     + conf.getProperty("database"),
                     user);
             usuario = new UsuarioDAO(this.con);
+            encargar = new EncargarDAO(this.con);
         } catch (IOException | SQLException i) {
             JOptionPane.showMessageDialog(null, "No se pudo acceder a la BD: " + i.getMessage());
             System.exit(1);
@@ -50,8 +53,8 @@ public class DBFront {
         return usuario.registrar(insert);
     }
 
-    public boolean insertUser(String[] insert, TipoUsuario tipo) {
-        return usuario.insertUser(insert, tipo);
+    public boolean insertUser(String[] insert) {
+        return usuario.insertUser(insert);
     }
 
     public ArrayList<Encargar> searchPedido(String[] search) {
