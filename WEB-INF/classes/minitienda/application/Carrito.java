@@ -1,4 +1,4 @@
-package minitienda.classes;
+package minitienda.application;
 
 import java.util.ArrayList;
 

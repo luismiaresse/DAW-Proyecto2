@@ -1,19 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!DOCTYPE web-app
-PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
-"http://java.sun.com/j2ee/dtds/web-app_2_3.dtd">
+        PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+        "http://java.sun.com/j2ee/dtds/web-app_2_3.dtd">
 
 <web-app>
 
-<servlet>
-<servlet-name>anadirProducto</servlet-name>
-<servlet-class>minitienda.anadirProducto</servlet-class>
-</servlet>
+    <servlet>
+        <servlet-name>anadirProducto</servlet-name>
+        <servlet-class>minitienda.actions.anadirProducto</servlet-class>
+    </servlet>
 
-<servlet-mapping>
- <servlet-name>anadirProducto</servlet-name>
- <url-pattern>/anadirProducto</url-pattern>
- </servlet-mapping>
+    <servlet>
+        <servlet-name>IniciarSesion</servlet-name>
+        <servlet-class>minitienda.actions.IniciarSesion</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>CerrarSesion</servlet-name>
+        <servlet-class>minitienda.actions.CerrarSesion</servlet-class>
+    </servlet>
+
+
+    <servlet-mapping>
+        <servlet-name>anadirProducto</servlet-name>
+        <url-pattern>/anadirProducto</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>IniciarSesion</servlet-name>
+        <url-pattern>/IniciarSesion</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>CerrarSesion</servlet-name>
+        <url-pattern>/CerrarSesion</url-pattern>
+    </servlet-mapping>
 
 </web-app>

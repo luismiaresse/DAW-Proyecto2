@@ -1,4 +1,4 @@
-package minitienda.classes;
+package minitienda.application;
 
 public class Producto {
 

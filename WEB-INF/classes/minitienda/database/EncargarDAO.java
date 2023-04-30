@@ -1,6 +1,6 @@
 package minitienda.database;
 
-import minitienda.classes.Encargar;
+import minitienda.application.Encargar;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -61,9 +61,6 @@ public class EncargarDAO extends AbstractDAO {
             con.setAutoCommit(false);
             if (pedidos.isEmpty()) {
                 stmEncargar = con.prepareStatement("insert into pedidos values (?, ?)");
-                for (int i = 1; i <= 4; i++) {
-
-                }
 
             } else {
                 int cantidad = 0;

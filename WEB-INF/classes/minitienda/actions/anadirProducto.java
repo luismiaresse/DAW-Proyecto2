@@ -1,20 +1,21 @@
-package minitienda;
+package minitienda.actions;
 
-import minitienda.classes.Carrito;
+import jakarta.servlet.http.HttpServlet;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import minitienda.database.DBFront;
+
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import java.io.*;
-import java.util.*;
 
 public class anadirProducto extends HttpServlet {
 
     //Carrito carrito;
 
-    public void init(ServletConfig config)
-            throws ServletException {
-
+    private DBFront db;
+    public void init(ServletConfig config) throws ServletException {
         super.init(config);
+        db = DBFront.getInstance();
     }
 
     // Se ejecuta cuando se envia un formulario con method="get" o sin method
@@ -27,24 +28,19 @@ public class anadirProducto extends HttpServlet {
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response)
             throws ServletException, IOException {
-/*
         // Obtenemos el producto y la cantidad a partir de la peticion
         String producto = request.getParameter("producto");
         String cantidad = request.getParameter("cantidad");
 
         HttpSession session = request.getSession(true);
 
-        // Guardamos datos en la sesion
-        session.setAttribute("producto", producto );
-        session.setAttribute("cantidad", cantidad );
-*/
-
-        String producto = request.getParameter("producto");
-
-        HttpSession session = request.getSession(true);
+//
+//        String producto = request.getParameter("producto");
+//
+//        HttpSession session = request.getSession(true);
 
         // Reenviamos a la pagina que muestra los parametros
-        gotoPage("/WEB-INF/classes/minitienda/verProductos.jsp", request, response);
+        gotoPage(Constantes.JSP_PATH + "/verProductos.jsp", request, response);
 
         //carrito.anadirProducto();
     }

@@ -1,60 +1,40 @@
 package minitienda.database;
 
-import minitienda.classes.*;
-import java.io.FileInputStream;
-import java.io.IOException;
+import minitienda.actions.Constantes;
+import minitienda.application.*;
+
 import java.util.ArrayList;
-import java.util.Properties;
 import java.sql.*;
-import javax.swing.JOptionPane;
 
 public class DBFront {
-
+    private static DBFront instancia = null;
     private Connection con;
     private UsuarioDAO usuario;
     private EncargarDAO encargar;
 
-    public DBFront() {
-        FileInputStream confFile = null;
+    private DBFront() {
         try {
-            confFile = new FileInputStream("database.properties");
-
-            Properties user = new Properties();
-            Properties conf = new Properties();
-
-            conf.load(confFile);
-            confFile.close();
-            user.setProperty("username", conf.getProperty("username"));
-            user.setProperty("password", conf.getProperty("password"));
-
-            this.con = DriverManager.getConnection("jdbc:"
-                    + conf.getProperty("manager") + "://"
-                    + conf.getProperty("server") + ":"
-                    + conf.getProperty("port") + "/"
-                    + conf.getProperty("database"),
-                    user);
+            this.con = DriverManager.getConnection(Constantes.DB_URL, Constantes.DB_USER, Constantes.DB_PASSWORD);
             usuario = new UsuarioDAO(this.con);
             encargar = new EncargarDAO(this.con);
-        } catch (IOException | SQLException i) {
-            JOptionPane.showMessageDialog(null, "No se pudo acceder a la BD: " + i.getMessage());
-            System.exit(1);
+        } catch (SQLException i) {
+            System.err.println("No se pudo acceder a la BD: " + i.getMessage());
         }
     }
 
-    public Usuario login(String username, String password) {
-        return this.usuario.login(username, password);
+    public static DBFront getInstance() {
+        if (instancia == null) {
+            instancia = new DBFront();
+        }
+        return instancia;
     }
 
-    public ArrayList<Usuario> searchUser(String[] search) {
-        return usuario.searchUser(search);
+    public Usuario loginRegister(String username, String password) {
+        return this.usuario.loginRegister(username, password);
     }
 
-    public boolean registerUser(String[] insert) {
-        return usuario.registrar(insert);
-    }
-
-    public boolean insertUser(String[] insert) {
-        return usuario.insertUser(insert);
+    public ArrayList<Usuario> searchUser(String nombre) {
+        return usuario.searchUser(nombre);
     }
 
     public ArrayList<Encargar> searchPedido(String[] search) {

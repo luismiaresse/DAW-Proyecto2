@@ -2,6 +2,7 @@
 <%@page import="java.io.*" %>
 <%@page import="java.util.*" %>
 <%@page session="true" %>
+<%@ page contentType="text/html; charset=UTF-8" %>
 
 <%
     // Obtenemos el nombre de usuario a partir de la sesion
@@ -14,14 +15,14 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <title>Musica para DAA</title>
+    <title>Musica para DAW</title>
     <meta charset="UTF-8">
 </head>
 <body bgcolor="#FDF5E6">
     <table align="center" border="0">
             <tr>
                 <th><IMG SRC="" ALIGN="CENTER"></th>
-                <th><font face="Times New Roman,Times" size="+3">Música para DAA</font></th>
+                <th><font face="Times New Roman,Times" size="+3">Música para DAW</font></th>
                 <th><IMG SRC="" ALIGN="CENTER"></th>
             </tr>
     </table>
@@ -54,10 +55,3 @@
     <p> Producto: <%=producto %> <br>Cantidad: <%=cantidad %></p>
 </body>
 </html>
-
-<%
-    // Obtenemos el nombre de usuario a partir de la sesion
-    String producto = (String)session.setAttribute("producto");
-    // Obtenemos el password a partir de la sesion
-    String cantidad = (String)session.getAttribute("cantidad");
-%>

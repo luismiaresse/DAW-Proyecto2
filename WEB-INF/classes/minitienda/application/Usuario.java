@@ -1,5 +1,5 @@
 
-package minitienda.classes;
+package minitienda.application;
 
 import java.util.ArrayList;
 
@@ -7,14 +7,14 @@ public class Usuario {
     private String nombre;
     private String clave;
 
-    public Usuario(String nombre, String clave) {
+    public Usuario(String nombre, String pwhash) {
         this.nombre = nombre;
-        this.clave = clave;
+        this.clave = pwhash;
     }
 
-    // Atributos comunes a clientes y monitores
+    // Atributos
     public static ArrayList<String> getAttributeNames() {
-        ArrayList<String> attr = new ArrayList<>(6);
+        ArrayList<String> attr = new ArrayList<>(2);
         attr.add("Nombre");
         attr.add("Clave");
         return attr;
