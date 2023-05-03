@@ -6,11 +6,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import minitienda.application.Usuario;
 import minitienda.database.DBFront;
 
 import java.io.IOException;
 
-public class CerrarSesion extends HttpServlet {
+public class Registrar extends HttpServlet {
     private DBFront db;
     public void init(ServletConfig config)
             throws ServletException {
@@ -22,13 +24,39 @@ public class CerrarSesion extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response)
             throws ServletException, IOException {
-        gotoPage("/WEB-INF/jsp/index.jsp", request, response);
     }
 
     // Se ejecuta cuando se envia un formulario con method="post"
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response)
             throws ServletException, IOException {
+        // Obtenemos el usuario y la clave a partir de la peticion
+        String usuario = request.getParameter("email");
+        String clave = request.getParameter("clave");
+
+        HttpSession session = request.getSession(true);
+        // Limpiamos un posible error anterior
+        session.removeAttribute("error-login");
+        Usuario user = db.login(usuario, clave);
+        // Guardamos datos en la sesion
+        if (user != null) {
+            System.err.println("Usuario: " + user.getEmail() + " Clave: " + user.getClave());
+            session.setAttribute("usuario", user.getEmail());
+        } else {
+            // Mostrar mensaje de error
+            session.setAttribute("error-login", "Contraseña incorrecta para el usuario " + usuario);
+        }
+
+
+//
+//        String producto = request.getParameter("producto");
+//
+//        HttpSession session = request.getSession(true);
+
+        // Reenviamos a la pagina que muestra los parametros
+        gotoPage("/WEB-INF/jsp/loginRegistro.jsp", request, response);
+
+        //carrito.anadirProducto();
     }
 
     private void gotoPage(String address, HttpServletRequest request, HttpServletResponse response)

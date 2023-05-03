@@ -4,22 +4,13 @@ package minitienda.application;
 import java.util.ArrayList;
 
 public class Usuario {
-    private String nombre;
+    private String email;
     private String clave;
 
-    public Usuario(String nombre, String pwhash) {
-        this.nombre = nombre;
+    public Usuario(String email, String pwhash) {
+        this.email = email;
         this.clave = pwhash;
     }
-
-    // Atributos
-    public static ArrayList<String> getAttributeNames() {
-        ArrayList<String> attr = new ArrayList<>(2);
-        attr.add("Nombre");
-        attr.add("Clave");
-        return attr;
-    }
-    
 
     public String getClave() {
         return clave;
@@ -29,12 +20,12 @@ public class Usuario {
         this.clave = clave;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getEmail() {
+        return email;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
 }

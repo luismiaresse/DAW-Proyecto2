@@ -1,37 +1,36 @@
 package minitienda.application;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Carrito {
 
-    private ArrayList<Producto> productos;
+    // Clave: id del producto
+    // Valor: cantidad de ese producto
+    private ArrayList<ElementoCarrito> elementos;
 
-    public Carrito(ArrayList<Producto> productos) {
-        this.productos = productos;
+    public Carrito() {
+        elementos = new ArrayList<>();
     }
 
-    public ArrayList<Producto> getProductos() {
-        return productos;
+    public ArrayList<ElementoCarrito> getElementos() {
+        return elementos;
     }
 
-    public void setProductos(ArrayList<Producto> productos) {
-        this.productos = productos;
+    public void anadirProducto(Producto producto, int cantidad) {
+        elementos.add(new ElementoCarrito(producto, cantidad));
     }
 
-    public void anadirProducto(Producto producto){
-        productos.add(producto);
+
+    public void eliminarProducto(int idProd){
+        for (ElementoCarrito elem : elementos) {
+            if (elem.getProducto().getId() == idProd) {
+                elementos.remove(elem);
+                break;
+            }
+        }
     }
 
-    public void eliminarProducto(int posProducto){
-        productos.remove(posProducto);
-    }
-
-    public static ArrayList<String> getAttributeNames() {
-        ArrayList<String> attr = new ArrayList<>(2);
-        attr.add("Precio");
-        attr.add("Cantidad");
-        return attr;
-    }
 
     @Override
     public boolean equals(Object obj) {

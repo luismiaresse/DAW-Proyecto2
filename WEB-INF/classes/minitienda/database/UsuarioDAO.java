@@ -1,6 +1,5 @@
 package minitienda.database;
 
-import minitienda.actions.Constantes;
 import minitienda.application.Usuario;
 
 import java.sql.Connection;
@@ -10,6 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class UsuarioDAO extends AbstractDAO {
+    private static final int MAX_USERNAME_LENGHT = 50;
 
     public UsuarioDAO(Connection con) {
         super.setConnection(con);
@@ -19,7 +19,7 @@ public class UsuarioDAO extends AbstractDAO {
         return BCrypt.hashpw(plain, BCrypt.gensalt());
     }
 
-    public Usuario loginRegister(String nombre, String clave) {
+    public Usuario login(String email, String clave) {
         // Crea el hash de la clave
         Usuario resultado = null;
         Connection con;
@@ -28,22 +28,23 @@ public class UsuarioDAO extends AbstractDAO {
 
         con = this.getConnection();
         try {
-            stmUsuario = con.prepareStatement("select nombre, pwhash "
+            stmUsuario = con.prepareStatement("select email, pwhash "
                     + "from usuarios "
-                    + "where nombre = ?");
-            stmUsuario.setString(1, nombre);
+                    + "where email = ?");
+            stmUsuario.setString(1, email);
             rsUsuario = stmUsuario.executeQuery();
             if (rsUsuario.next()) {
-                System.err.println("Usuario: " + rsUsuario.getString("nombre") + " encontrado");
+                System.err.println("Usuario: " + rsUsuario.getString("email") + " encontrado");
                 String storedHash = rsUsuario.getString("pwhash");
                 if (!BCrypt.checkpw(clave, storedHash)) {
                     System.err.println("Contraseña incorrecta");
                     return null;
                 }
-                resultado = new Usuario(nombre, storedHash);
+                resultado = new Usuario(email, storedHash);
             } else {
-                // No existe el usuario, lo registramos
-                resultado = registerUser(nombre, clave);
+                // No existe el usuario, mostrar error
+                System.err.println("Usuario: " + email + " no encontrado");
+                return null;
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -52,7 +53,7 @@ public class UsuarioDAO extends AbstractDAO {
         return resultado;
     }
 
-    public ArrayList<Usuario> searchUser(String nombre) {
+    public ArrayList<Usuario> searchUser(String email) {
         ArrayList<Usuario> resultado = new ArrayList<>();
         Connection con;
         PreparedStatement stmUsuario = null;
@@ -60,13 +61,13 @@ public class UsuarioDAO extends AbstractDAO {
 
         con = this.getConnection();
         try {
-            stmUsuario = con.prepareStatement("select nombre, pwhash "
+            stmUsuario = con.prepareStatement("select email, pwhash "
                     + "from usuarios "
-                    + "where nombre = ?");
-            stmUsuario.setString(1, nombre);
+                    + "where email = ?");
+            stmUsuario.setString(1, email);
             rsUsuario = stmUsuario.executeQuery();
             while (rsUsuario.next()) {
-                Usuario usuario = new Usuario(rsUsuario.getString("nombre"), rsUsuario.getString("pwhash"));
+                Usuario usuario = new Usuario(rsUsuario.getString("email"), rsUsuario.getString("pwhash"));
                 resultado.add(usuario);
             }
 
@@ -77,42 +78,36 @@ public class UsuarioDAO extends AbstractDAO {
         return resultado;
     }
 
-    private boolean insertUser(String nombre, String hashedPassword) {
+    private boolean insertUser(String email, String hashedPassword) {
         Connection con;
         PreparedStatement stmUsuario;
         con = this.getConnection();
         try {
             stmUsuario = con.prepareStatement("INSERT INTO public.usuarios VALUES (?, ?)");
-            stmUsuario.setString(1, nombre);
+            stmUsuario.setString(1, email);
             stmUsuario.setString(2, hashedPassword);
             stmUsuario.executeUpdate();
         } catch (SQLException ex) {
             System.err.println("Error al insertar usuario: " + ex.getMessage());
-            try {
-                // Revierte en caso de fallo (evita error "current transaction is aborted")
-                con.rollback();
-            } catch (SQLException exc) {
-                System.err.println("Error al revertir la transacción: " + exc.getMessage());
-            }
             return false;
         }
         return true;
     }
 
-    private Usuario registerUser(String nombre, String clave) {
-        if (nombre == null || clave == null || nombre.equals("") || clave.equals("") || nombre.length() > Constantes.MAX_USERNAME_LENGHT) {
-            System.err.println("Nombre o clave inválidos");
+    private Usuario registerUser(String email, String clave) {
+        if (email == null || clave == null || email.equals("") || clave.equals("") || email.length() > MAX_USERNAME_LENGHT) {
+            System.err.println("Email o clave inválidos");
             return null;
         }
 
         // Comprueba si el usuario ya existe
         ArrayList<Usuario> comprob;
-        comprob = searchUser(nombre);
+        comprob = searchUser(email);
         String hashedPassword = hashPassword(clave);
-        if (comprob.isEmpty() && insertUser(nombre, hashedPassword)) {
-            return new Usuario(nombre, hashedPassword);
+        if (comprob.isEmpty() && insertUser(email, hashedPassword)) {
+            return new Usuario(email, hashedPassword);
         } else {
-            System.err.println("El usuario " + nombre + " ya existe");
+            System.err.println("El usuario " + email + " ya existe");
             return null;
         }
     }

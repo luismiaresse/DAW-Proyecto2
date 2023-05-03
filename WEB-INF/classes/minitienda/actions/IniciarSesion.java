@@ -31,31 +31,25 @@ public class IniciarSesion extends HttpServlet {
                        HttpServletResponse response)
             throws ServletException, IOException {
         // Obtenemos el usuario y la clave a partir de la peticion
-        String usuario = request.getParameter("usuario");
+        String usuario = request.getParameter("email");
         String clave = request.getParameter("clave");
 
         HttpSession session = request.getSession(true);
         // Limpiamos un posible error anterior
         session.removeAttribute("error-login");
-        Usuario user = db.loginRegister(usuario, clave);
+        Usuario user = db.login(usuario, clave);
         // Guardamos datos en la sesion
         if (user != null) {
-            System.err.println("Usuario: " + user.getNombre() + " Clave: " + user.getClave());
-            session.setAttribute("usuario", user.getNombre());
-            session.setAttribute("clave", user.getClave());
+            System.err.println("Usuario: " + user.getEmail() + " Clave: " + user.getClave());
+            session.setAttribute("usuario", user.getEmail());
         } else {
             // Mostrar mensaje de error
             session.setAttribute("error-login", "Contraseña incorrecta para el usuario " + usuario);
         }
 
 
-//
-//        String producto = request.getParameter("producto");
-//
-//        HttpSession session = request.getSession(true);
-
         // Reenviamos a la pagina que muestra los parametros
-        gotoPage(Constantes.JSP_PATH + "/iniciarSesion.jsp", request, response);
+        gotoPage("/WEB-INF/jsp/loginRegistro.jsp", request, response);
 
         //carrito.anadirProducto();
     }
