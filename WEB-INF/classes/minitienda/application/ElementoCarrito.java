@@ -9,6 +9,8 @@ public class ElementoCarrito {
         this.producto = producto;
         this.cantidad = cantidad;
         this.subtotal = producto.getPrecio() * cantidad;
+        // Truncamos el subtotal a dos decimales
+        this.subtotal = (float) (Math.round(this.subtotal * 100.0) / 100.0);
     }
 
     public Producto getProducto() {
@@ -17,6 +19,13 @@ public class ElementoCarrito {
 
     public int getCantidad() {
         return cantidad;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+        this.subtotal = producto.getPrecio() * cantidad;
+        // Truncamos el subtotal a dos decimales
+        this.subtotal = (float) (Math.round(this.subtotal * 100.0) / 100.0);
     }
 
     public float getSubtotal() {

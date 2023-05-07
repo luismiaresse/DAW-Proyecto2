@@ -7,7 +7,7 @@
 <%@ page isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%-- Recuperar la lista de productos de la DB --%>
+<%-- Recuperar la lista de productos de la BD --%>
 <c:set var="productos" value="<%= new ObtenerProductos().getProducts() %>"/>
 
 
@@ -17,7 +17,7 @@
     <title>Música para DAW</title>
     <meta charset="UTF-8">
 </head>
-<body bgcolor="#FDF5E6">
+<body style="background-color: #FDF5E6; margin: 3%">
 <table align="center" border="0">
     <tr>
         <th><IMG SRC="" ALIGN="CENTER"></th>
@@ -26,35 +26,36 @@
     </tr>
 </table>
 <hr>
-<form id="login-form" action="IniciarSesion" method="post">
-    <label for="login-email">Correo electrónico:</label>
-    <input type="text" id="login-email" name="email" required placeholder="Email">
-    <label for="login-password">Contraseña:</label>
-    <input type="password" id="login-password" name="clave" required placeholder="Contraseña">
-    <input type="submit" value="Iniciar sesión">
-</form>
-<hr>
-<form action="anadirProducto" method="post">
+<form action="AnadirProducto" method="post">
     <b>CD:</b>
     <label>
         <select name="idProducto">
             <c:forEach items="${productos}" var="producto">
                 <option value="${producto.id}">${producto.nombre} | ${producto.autor}
-                    | ${producto.pais} | $${producto.precio}</option>
+                    | ${producto.pais} | ${producto.precio}€</option>
             </c:forEach>
         </select>
     </label>
     <b>Cantidad:</b>
     <input type="text" name="cantidad" value="1">
+    <br>
+    <c:if test="${not empty sessionScope.anadido}">
+        <font color="green">Producto añadido al carrito correctamente</font>
+        <c:remove var="anadido" scope="session"/>
+    </c:if>
+    <br>
     <center>
         <input type="submit" value="Añadir producto">
     </center>
 </form>
-<form action="VerCarrito" method="post">
-    <center>
-        <input type="submit" value="Ver carrito">
-    </center>
-</form>
+<br>
+<center>
+    <button onclick="location.href='VerCarrito'">Ver carrito</button>
+</center>
 <hr>
+<c:if test="${not empty sessionScope.compra}">
+    <font color="green">Compra realizada, gracias por confiar en nosotros</font>
+    <c:remove var="compra" scope="session"/>
+</c:if>
 </body>
 </html>

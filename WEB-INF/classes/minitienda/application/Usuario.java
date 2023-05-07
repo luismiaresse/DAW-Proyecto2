@@ -1,31 +1,37 @@
 
 package minitienda.application;
 
-import java.util.ArrayList;
+import minitienda.database.BCrypt;
 
 public class Usuario {
     private String email;
-    private String clave;
+    private TipoTarjeta tipoTarjeta;
+    private String numTarjeta;
 
-    public Usuario(String email, String pwhash) {
+    public Usuario(String email) {
         this.email = email;
-        this.clave = pwhash;
     }
 
-    public String getClave() {
-        return clave;
-    }
-
-    public void setClave(String clave) {
-        this.clave = clave;
+    public Usuario(String email, TipoTarjeta tipoTarjeta, String numTarjeta) {
+        this.email = email;
+        this.tipoTarjeta = tipoTarjeta;
+        this.numTarjeta = numTarjeta;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public TipoTarjeta getTipoTarjeta() {
+        return tipoTarjeta;
+    }
+
+    public String getNumTarjeta() {
+        return numTarjeta;
+    }
+
+    public String getNumTarjetaOculto() {
+        return "**** **** **** " + numTarjeta.substring(numTarjeta.length() - 4);
     }
 
 }

@@ -38,20 +38,16 @@ public class DBFront {
         return instancia;
     }
 
-    public Usuario login(String username, String password) {
-        return this.usuario.login(username, password);
+    public Usuario login(String email, String clave) {
+        return this.usuario.login(email, clave);
     }
 
-    public ArrayList<Usuario> searchUser(String nombre) {
-        return usuario.searchUser(nombre);
+    public boolean register(Usuario usuario, String clave) {
+        return this.usuario.register(usuario, clave);
     }
 
-    public ArrayList<Encargar> searchPedido(String[] search) {
-        return encargar.searchPedido(search);
-    }
-
-    public boolean hacerPedido(String[] insert) {
-        return encargar.hacerPedido(insert);
+    public boolean hacerPedido(Usuario usuario, Carrito carrito) {
+        return encargar.hacerPedido(usuario, carrito);
     }
 
     public ArrayList<Producto> getProducts() {

@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Carrito {
-
-    // Clave: id del producto
-    // Valor: cantidad de ese producto
     private ArrayList<ElementoCarrito> elementos;
 
     public Carrito() {
@@ -18,6 +15,13 @@ public class Carrito {
     }
 
     public void anadirProducto(Producto producto, int cantidad) {
+        // Si el producto ya está en el carrito, se actualiza la cantidad
+        for (ElementoCarrito elem : elementos) {
+            if (elem.getProducto().getId() == producto.getId()) {
+                elem.setCantidad(elem.getCantidad() + cantidad);
+                return;
+            }
+        }
         elementos.add(new ElementoCarrito(producto, cantidad));
     }
 
@@ -29,6 +33,14 @@ public class Carrito {
                 break;
             }
         }
+    }
+
+    public float getPrecioTotal() {
+        float precio = 0;
+        for (ElementoCarrito elem : elementos) {
+            precio += elem.getSubtotal();
+        }
+        return precio;
     }
 
 

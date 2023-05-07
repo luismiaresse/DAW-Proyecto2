@@ -2,46 +2,53 @@ package minitienda.actions;
 
 import jakarta.servlet.http.HttpServlet;
 
-import minitienda.application.Carrito;
-import minitienda.application.ElementoCarrito;
 import minitienda.application.Producto;
 import minitienda.database.DBFront;
+import minitienda.application.Carrito;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import java.io.*;
-import java.util.logging.Logger;
 
-public class VerCarrito extends HttpServlet {
+public class AnadirProducto extends HttpServlet {
 
+    private DBFront db;
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
+        db = DBFront.getInstance();
     }
 
     // Se ejecuta cuando se envia un formulario con method="get" o sin method
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response)
             throws ServletException, IOException {
-        // Calcular el precio total del carrito
-        HttpSession session = request.getSession(true);
-        Carrito carrito = (Carrito) session.getAttribute("carrito");
-        float precioTotal = 0;
-        if (carrito != null) {
-            precioTotal = carrito.getPrecioTotal();
-        }
-        // Truncamos el precio a dos decimales
-        precioTotal = (float) (Math.round(precioTotal * 100.0) / 100.0);
-        session.setAttribute("precioTotal", precioTotal);
-
-        // Reenviamos a la pagina que muestra los parametros
-        gotoPage("/WEB-INF/jsp/carrito.jsp", request, response);
     }
 
     // Se ejecuta cuando se envia un formulario con method="post"
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response)
             throws ServletException, IOException {
+        // Obtenemos el producto y la cantidad a partir de la peticion
+        int idProducto = Integer.parseInt(request.getParameter("idProducto"));
+        int cantidad = Integer.parseInt(request.getParameter("cantidad"));
+        if (cantidad <= 0) {
+            cantidad = 1;
+        }
+        Producto producto = db.getProductById(idProducto);
+        HttpSession session = request.getSession(true);
 
+        // Obtenemos la lista de productos del carrito
+        Carrito carrito = (Carrito) session.getAttribute("carrito");
+        System.err.println("Carrito: " + carrito);
+        if (carrito == null) {
+            carrito = new Carrito();
+        }
+        carrito.anadirProducto(producto, cantidad);
+        session.setAttribute("carrito", carrito);
+        session.setAttribute("anadido", true);  // Mostrar mensaje de producto añadido
+
+        // Reenviamos a la pagina que muestra los parametros
+        gotoPage("/WEB-INF/jsp/index.jsp", request, response);
     }
 
     private void gotoPage(String address, HttpServletRequest request, HttpServletResponse response)
@@ -49,6 +56,7 @@ public class VerCarrito extends HttpServlet {
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(address);
         dispatcher.forward(request, response);
     }
+
 
     public void destroy() {
     }
