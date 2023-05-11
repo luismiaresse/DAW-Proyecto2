@@ -1,14 +1,12 @@
 package minitienda.actions;
 
-import jakarta.servlet.http.HttpServlet;
-
 import minitienda.application.Carrito;
 import minitienda.application.ElementoCarrito;
 import minitienda.application.Producto;
 import minitienda.database.DBFront;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
 import java.io.*;
 import java.util.logging.Logger;
 

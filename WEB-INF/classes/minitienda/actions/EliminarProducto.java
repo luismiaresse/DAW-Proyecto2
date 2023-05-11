@@ -1,12 +1,12 @@
 package minitienda.actions;
 
-import jakarta.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServlet;
 
 import minitienda.database.DBFront;
 import minitienda.application.Carrito;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
 import java.io.*;
 
 public class EliminarProducto extends HttpServlet {
